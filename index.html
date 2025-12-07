@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BME - BitWise Manipulation Encryption</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.21.0/dist/tf.min.js"></script>
+    <script src="app.js"></script>
+
+
+
+    
+</head>
+<body>
+<header class="main-header">
+    <div id="mode-status" style="font-weight:bold; color:#00cc99;">Loading AI model...</div>
+
+    <div class="nav-container">
+        <div class="nav-logo">
+            <i class="fas fa-shield-alt"></i>
+            <span>BME</span>
+        </div>
+
+        <nav class="navbar">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="about.html" class="nav-link">About</a>
+            <a href="team.html" class="nav-link">Team</a>
+        </nav>
+
+        <div class="ai-status-mini">
+            <i class="fas fa-brain"></i>
+            <span>AI Secured</span>
+        </div>
+    </div>
+</header>
+<br><br>
+<div class="container">
+    <!-- Enhanced Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <i class="fas fa-shield-alt logo-icon"></i>
+                <div>
+                    <h1>BME</h1>
+                    <p class="subtitle" style="color: black">BitWise Manipulation Encryption System</p>
+                </div>
+            </div>
+            <div class="ai-status-container">
+                <div class="ai-status-badge">
+                    <i class="fas fa-brain"></i>
+                    <span id="ai-status">100% Secured.</span>
+                </div>
+            </div>
+        </div>
+        <div class="header-description">
+            <p>AI-Enhanced Partition-Based File Encryption with Ultra-Compact Keys</p>
+            <div class="features-badges">
+                <span class="feature-badge"><i class="fas fa-robot"></i> AI Optimized</span>
+                <span class="feature-badge"><i class="fas fa-compress"></i> 95% Key Compression</span>
+                <span class="feature-badge"><i class="fas fa-lock"></i> Military Grade</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Tab System -->
+    <div class="tab-container">
+        <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="encrypt">
+                <i class="fas fa-lock"></i>
+                Encrypt Files
+            </button>
+            <button class="tab-btn" data-tab="decrypt">
+                <i class="fas fa-unlock"></i>
+                Decrypt Files
+            </button>
+            <button class="tab-btn" data-tab="protocol">
+                <i class="fas fa-cog"></i>
+                System Info
+            </button>
+        </div>
+
+        <!-- ENCRYPT TAB -->
+        <div id="encrypt-tab" class="tab-content active">
+            <div class="upload-section">
+                <div class="upload-area" id="encrypt-upload">
+                    <input type="file" id="encrypt-file" class="hidden" accept="*">
+                    <div class="upload-content">
+                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                        <h3>Drop your file here or click to browse</h3>
+                        <p>Maximum file size: 50 MB</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File Info -->
+            <div id="encrypt-info" class="file-info hidden">
+                <div class="info-header">
+                    <h3><i class="fas fa-file-alt"></i> File Analysis</h3>
+                </div>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-icon"><i class="fas fa-file"></i></div>
+                        <div class="info-content">
+                            <label>Filename</label>
+                            <span id="encrypt-filename">-</span>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon"><i class="fas fa-weight-hanging"></i></div>
+                        <div class="info-content">
+                            <label>File Size</label>
+                            <span id="encrypt-filesize">-</span>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon"><i class="fas fa-tag"></i></div>
+                        <div class="info-content">
+                            <label>File Type</label>
+                            <span id="encrypt-filetype">-</span>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="info-content">
+                            <label>Entropy</label>
+                            <span id="encrypt-entropy">-</span>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon"><i class="fas fa-percentage"></i></div>
+                        <div class="info-content">
+                            <label>Corruption Ratio</label>
+                            <span id="encrypt-ratio">-</span>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon"><i class="fas fa-puzzle-piece"></i></div>
+                        <div class="info-content">
+                            <label>Partitions</label>
+                            <span id="encrypt-partitions">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTIONS -->
+            <div class="action-section">
+                <button id="start-encrypt" class="btn btn--primary btn--lg btn--full-width hidden">
+                    <i class="fas fa-lock"></i>
+                    Start Encryption
+                </button>
+            </div>
+            <div id="bundle-upload" class="upload-area">
+                <p>Select multiple files to <strong>ZIP-compress</strong> and encrypt:</p>
+                <input id="bundle-files" type="file" multiple class="hidden" />
+                <button id="bundle-select-btn" class="btn">Choose Files</button>
+
+                <div style="margin-top: 0.75rem;">
+                    <label for="bundle-max-mb">
+                    Max bundle size (MB):
+                    </label>
+                    <input id="bundle-max-mb"
+                        type="number"
+                        min="1"
+                        value="50"
+                        style="width: 80px; margin-left: 0.5rem;" />
+            </div>
+
+            <button id="bundle-encrypt-btn" class="btn btn--primary" disabled>
+                Bundle (ZIP + Compress) & Encrypt
+            </button>
+            </div>
+
+
+            <!-- Progress -->
+            <div id="encrypt-progress" class="progress-section hidden">
+                <div class="progress-header">
+                    <h4><i class="fas fa-cog fa-spin"></i> Encrypting File...</h4>
+                </div>
+                <div class="progress-bar">
+                    <div id="encrypt-progress-fill" class="progress-fill"></div>
+                </div>
+                <div class="progress-info">
+                    <span id="encrypt-progress-text">0%</span>
+                    <span id="encrypt-throughput">-</span>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div id="encrypt-results" class="results-section hidden">
+                <div class="results-header">
+                    <h3><i class="fas fa-check-circle"></i> Encryption Complete!</h3>
+                    <div class="results-actions">
+                        <button id="take-screenshot" class="btn btn--secondary">
+                            <i class="fas fa-camera"></i>
+                            Take Screenshot
+                        </button>
+                    </div>
+                </div>
+
+                <div class="key-section">
+                    <div class="key-header">
+                        <h4><i class="fas fa-key"></i> Your Encryption Key</h4>
+                        <div class="key-actions">
+                            <button class="btn btn--outline btn--sm copy-btn dynamic-copy" data-target="encryption-key">
+                                <i class="fas fa-copy"></i>
+                                <span class="btn-text">Copy Key</span>
+                            </button>
+                            <button id="save-key-txt" class="btn btn--secondary btn--sm">
+                                <i class="fas fa-download"></i>
+                                Save as TXT
+                            </button>
+                        </div>
+                    </div>
+                    <textarea id="encryption-key" class="form-control key-display" readonly></textarea>
+                    <div class="key-notice">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Critical:</strong> This key is required to decrypt your file. Save it securely!
+                    </div>
+                </div>
+
+                <div class="verification-grid">
+                    <div class="verification-item">
+                        <label><i class="fas fa-fingerprint"></i> Original Hash</label>
+                        <div class="hash-display" id="original-hash">-</div>
+                    </div>
+                    <div class="verification-item">
+                        <label><i class="fas fa-shield-alt"></i> Encrypted Hash</label>
+                        <div class="hash-display" id="encrypted-hash">-</div>
+                    </div>
+                </div>
+
+                <div class="download-section">
+                    <button id="download-encrypted" class="btn btn--primary btn--lg btn--full-width">
+                        <i class="fas fa-download"></i>
+                        Download Encrypted File (.nec)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DECRYPT TAB -->
+        <div id="decrypt-tab" class="tab-content">
+            <div class="upload-section">
+                <div class="upload-area" id="decrypt-upload">
+                    <input type="file" id="decrypt-file" class="hidden" accept=".nec">
+                    <div class="upload-content">
+                        <i class="fas fa-file-import upload-icon"></i>
+                        <h3>Upload your encrypted .nec file</h3>
+                        <p>Select the file you want to decrypt</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="decrypt-credentials" class="credentials-section hidden">
+                <div class="credentials-header">
+                    <h3><i class="fas fa-key"></i> Enter Decryption Key</h3>
+                </div>
+                <div class="form-group">
+                    <textarea id="decrypt-key" class="form-control"
+                              placeholder="Paste your complete encryption key here..."
+                              rows="4"></textarea>
+                    <div class="key-help">
+                        <i class="fas fa-info-circle"></i>
+                        Paste the complete key you received during encryption
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-section">
+                <button id="start-decrypt" class="btn btn--primary btn--lg btn--full-width hidden">
+                    <i class="fas fa-unlock"></i>
+                    Start Decryption
+                </button>
+                <button id="fs-open-decrypt" class="btn btn--outline">Open .nec (direct) & Decrypt</button>
+                <button id="fs-overwrite-decrypted" class="btn btn--danger">Overwrite Original with Decrypted</button>
+            </div>
+
+            <div id="decrypt-progress" class="progress-section hidden">
+                <div class="progress-header">
+                    <h4><i class="fas fa-cog fa-spin"></i> Decrypting File...</h4>
+                </div>
+                <div class="progress-bar">
+                    <div id="decrypt-progress-fill" class="progress-fill"></div>
+                </div>
+                <div class="progress-info">
+                    <span id="decrypt-progress-text">0%</span>
+                    <span id="decrypt-throughput">-</span>
+                </div>
+            </div>
+
+            <div id="decrypt-verification" class="verification-section hidden">
+                <div class="verification-header">
+                    <h3><i class="fas fa-shield-check"></i> Verification Results</h3>
+                </div>
+
+                <div class="verification-status">
+                    <div id="hash-match-status" class="status">Checking...</div>
+                </div>
+
+                <div class="verification-grid">
+                    <div class="verification-item">
+                        <label><i class="fas fa-fingerprint"></i> Original Hash</label>
+                        <div class="hash-display" id="verify-original-hash">-</div>
+                    </div>
+                    <div class="verification-item">
+                        <label><i class="fas fa-check-circle"></i> Restored Hash</label>
+                        <div class="hash-display" id="verify-restored-hash">-</div>
+                    </div>
+                </div>
+
+                <div class="download-section">
+                    <button id="download-restored" class="btn btn--success btn--lg btn--full-width hidden">
+                        <i class="fas fa-download"></i>
+                        Download Restored File
+                    </button>
+                    <a id="download-restored-link" class="hidden"></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SYSTEM INFO TAB -->
+        <div id="protocol-tab" class="tab-content">
+            <div class="system-overview">
+                <div class="overview-header">
+                    <h3><i class="fas fa-info-circle"></i> System Information</h3>
+                </div>
+
+                <div class="protocols-grid">
+                    <div class="card">
+                        <div class="card__body">
+                            <h4><i class="fas fa-brain"></i> AI Engine</h4>
+                            <div class="protocol-detail">
+                                <strong>Neural Network:</strong> Multi-output TensorFlow model<br>
+                                <strong>Features:</strong> 25-dimensional analysis vector<br>
+                                <strong>Optimization:</strong> Partition-based key compression<br>
+                                <strong>Prediction:</strong> Corruption ratio, strategy weights, partition config
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h4><i class="fas fa-shield-alt"></i> Encryption</h4>
+                            <div class="protocol-detail">
+                                <strong>Algorithm:</strong> Partition-based bit flipping<br>
+                                <strong>Key Derivation:</strong> PBKDF2 (150,000 iterations)<br>
+                                <strong>Verification:</strong> HMAC-SHA256<br>
+                                <strong>Compression:</strong> 90-95% key size reduction
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card__body">
+                            <h4><i class="fas fa-cogs"></i> Features</h4>
+                            <div class="protocol-detail">
+                                <strong>File Types:</strong> Universal support<br>
+                                <strong>Max Size:</strong> 150 MB<br>
+                                <strong>Chunking:</strong> 10 MB processing chunks<br>
+                                <strong>Encoding:</strong> Base85 key format
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="self-test-section">
+                <div class="test-header">
+                    <h3><i class="fas fa-vial"></i> System Self-Test</h3>
+                    <button id="run-self-test" class="btn btn--outline">
+                        <i class="fas fa-play"></i>
+                        Run Test
+                    </button>
+                </div>
+
+                <div id="self-test-results" class="test-results hidden">
+                    <div class="test-status">Ready to test...</div>
+                    <pre class="test-details"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Neural Encryption Corrector - AI-Enhanced Security</p>
+        </div>
+    </footer>
+</div>
+
+
+
+<script>
+    // Small front-end behavior: lossy toggle show/hide + quick presets
+    document.addEventListener('DOMContentLoaded', () => {
+        const lossyCheckbox = document.getElementById('lossy-compression-enabled');
+        const lossyOptions  = document.getElementById('lossy-options');
+        const targetInput   = document.getElementById('lossy-target-mb');
+        const presetButtons = document.querySelectorAll('.lossy-size-preset');
+
+        if (lossyCheckbox && lossyOptions) {
+            const updateLossyUI = () => {
+                lossyOptions.style.display = lossyCheckbox.checked ? 'block' : 'none';
+            };
+            lossyCheckbox.addEventListener('change', updateLossyUI);
+            updateLossyUI();
+        }
+
+        if (targetInput && presetButtons.length) {
+            presetButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const size = btn.getAttribute('data-size');
+                    if (size) targetInput.value = size;
+                });
+            });
+        }
+    });
+</script>
+</body>
+</html>
