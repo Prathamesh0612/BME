@@ -1982,3 +1982,40 @@ async tryPostProcessRestored(restored) {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 }
+
+
+// New code===== Progress Counter Helpers =====
+function setEncryptProgress(percent, throughputText = '') {
+    const fill = document.getElementById("encrypt-progress-fill");
+    const text = document.getElementById("encrypt-progress-text");
+    const tp = document.getElementById("encrypt-throughput");
+
+    const safe = Math.min(100, Math.max(0, Math.floor(percent)));
+
+    if (fill) fill.style.width = safe + "%";
+    if (text) text.textContent = safe + "%";
+    if (tp && throughputText) tp.textContent = throughputText;
+}
+
+function startEncryptCounter(durationMs = 4000) {
+    let start = performance.now();
+
+    function tick(now) {
+        const elapsed = now - start;
+        const progress = (elapsed / durationMs) * 98; // 🚫 never hit 100 yet
+
+        setEncryptProgress(progress);
+
+        if (elapsed < durationMs) {
+            requestAnimationFrame(tick);
+        }
+    }
+
+    setEncryptProgress(0);           // ✅ start from 0
+    requestAnimationFrame(tick);
+}
+
+function finishEncryptCounter() {
+    setTimeout(() => setEncryptProgress(100), 200); // ✅ snap to 100 at end
+}
+
