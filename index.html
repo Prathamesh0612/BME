@@ -12,6 +12,23 @@
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.21.0/dist/tf.min.js"></script>
     <script src="app.js"></script>
+<style>
+.fs-status {
+    margin-top: 8px;
+    font-size: 13px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    display: none;
+    background: rgba(0, 128, 0, 0.10);
+    border: 1px solid rgba(0, 128, 0, 0.25);
+    color: #008000;
+}
+.fs-status.error {
+    background: rgba(200, 0, 0, 0.10);
+    border-color: rgba(200, 0, 0, 0.25);
+    color: #c00;
+}
+</style>
 
 
 
@@ -187,8 +204,9 @@
             <button id="fs-overwrite-encrypted" class="btn btn--danger" disabled>
                 ② Overwrite original with ENCRYPTED file
             </button>
+            <div id="encrypt-fs-status" class="fs-status"></div>
             <small style="display:block;margin-top:4px;font-size:12px;opacity:0.8">
-                Works only in Chrome/Edge (desktop) over HTTPS.
+                Works only in Chromium based Browser.
             </small>
             </div>
 
@@ -302,6 +320,7 @@
             <button id="fs-overwrite-decrypted" class="btn btn--success" disabled>
                 ② Overwrite original with DECRYPTED file
             </button>
+            <div id="decrypt-fs-status" class="fs-status"></div>
             </div>
 
 

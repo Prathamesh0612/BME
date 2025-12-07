@@ -5,7 +5,7 @@ let necModel = null;
 async function loadNECModel() {
     try {
         // TFJS model ka relative URL
-        necModel = await tf.loadLayersModel('./nec_model_tjfs/model.json');
+        necModel = await tf.loadLayersModel('nec_model_tfjs/model.json');
         console.log('✓ NEC AI model loaded successfully');
         updateAIStatus('✓ AI Model Active');
         return true;
@@ -1836,38 +1836,64 @@ async tryPostProcessRestored(restored) {
     }
 
     async overwriteOriginalWithEncrypted() {
-        if (!this.encryptFileHandle || !this.encryptedData) {
-            this.showError('No original file handle or encrypted data available');
-            return;
-        }
+    const statusBox = document.getElementById("encrypt-fs-status");
+    statusBox.style.display = "none";
 
-        try {
-            const writable = await this.encryptFileHandle.createWritable();
-            await writable.write(this.encryptedData);
-            await writable.close();
-            this.showSuccess('Original file overwritten with encrypted data (with your permission).');
-        } catch (e) {
-            console.error('overwriteOriginalWithEncrypted error', e);
-            this.showError('Failed to overwrite original file: ' + e.message);
-        }
+    if (!this.encryptFileHandle || !this.encryptedData) {
+        statusBox.textContent = "No file selected or no encrypted data.";
+        statusBox.classList.add("error");
+        statusBox.style.display = "block";
+        return;
     }
 
-    async overwriteOriginalWithDecrypted() {
-        if (!this.decryptFileHandle || !this.restoredData) {
-            this.showError('No original file handle or restored data available');
-            return;
-        }
+    try {
+        const writable = await this.encryptFileHandle.createWritable();
+        await writable.write(this.encryptedData);
+        await writable.close();
 
-        try {
-            const writable = await this.decryptFileHandle.createWritable();
-            await writable.write(this.restoredData);
-            await writable.close();
-            this.showSuccess('Original file overwritten with decrypted data (with your permission).');
-        } catch (e) {
-            console.error('overwriteOriginalWithDecrypted error', e);
-            this.showError('Failed to overwrite original file: ' + e.message);
-        }
+        statusBox.classList.remove("error");
+        statusBox.textContent =
+            "Encrypted file written successfully → " +
+            this.encryptFileHandle.name;
+        statusBox.style.display = "block";
+
+    } catch (e) {
+        statusBox.textContent = "Error overwriting file: " + e.message;
+        statusBox.classList.add("error");
+        statusBox.style.display = "block";
     }
+}
+
+
+   async overwriteOriginalWithDecrypted() {
+    const statusBox = document.getElementById("decrypt-fs-status");
+    statusBox.style.display = "none";
+
+    if (!this.decryptFileHandle || !this.restoredData) {
+        statusBox.textContent = "No file or decrypted data to write.";
+        statusBox.classList.add("error");
+        statusBox.style.display = "block";
+        return;
+    }
+
+    try {
+        const writable = await this.decryptFileHandle.createWritable();
+        await writable.write(this.restoredData);
+        await writable.close();
+
+        statusBox.classList.remove("error");
+        statusBox.textContent =
+            "Decrypted file restored → " +
+            this.decryptFileHandle.name;
+        statusBox.style.display = "block";
+
+    } catch (e) {
+        statusBox.textContent = "Error overwriting: " + e.message;
+        statusBox.classList.add("error");
+        statusBox.style.display = "block";
+    }
+}
+
 
     // -------- UI utilities --------
     showProgress(type, percent) {
@@ -1956,6 +1982,3 @@ async tryPostProcessRestored(restored) {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 }
-
-
-
