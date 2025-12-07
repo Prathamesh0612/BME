@@ -170,11 +170,26 @@
                         min="1"
                         value="50"
                         style="width: 80px; margin-left: 0.5rem;" />
+                        
             </div>
 
             <button id="bundle-encrypt-btn" class="btn btn--primary" disabled>
                 Bundle (ZIP + Compress) & Encrypt
             </button>
+            </div>
+            <!-- NORMAL upload area as is -->
+
+            <div class="advanced-fs-actions">
+            <h4>Advanced (On-device overwrite)</h4>
+            <button id="fs-open-encrypt" class="btn btn--outline">
+                ① Select original file (advanced)
+            </button>
+            <button id="fs-overwrite-encrypted" class="btn btn--danger" disabled>
+                ② Overwrite original with ENCRYPTED file
+            </button>
+            <small style="display:block;margin-top:4px;font-size:12px;opacity:0.8">
+                Works only in Chrome/Edge (desktop) over HTTPS.
+            </small>
             </div>
 
 
@@ -278,9 +293,17 @@
                     <i class="fas fa-unlock"></i>
                     Start Decryption
                 </button>
-                <button id="fs-open-decrypt" class="btn btn--outline">Open .nec (direct) & Decrypt</button>
-                <button id="fs-overwrite-decrypted" class="btn btn--danger">Overwrite Original with Decrypted</button>
             </div>
+            <div class="advanced-fs-actions">
+            <h4>Advanced (On-device overwrite)</h4>
+            <button id="fs-open-decrypt" class="btn btn--outline">
+                ① Select encrypted file via system picker
+            </button>
+            <button id="fs-overwrite-decrypted" class="btn btn--success" disabled>
+                ② Overwrite original with DECRYPTED file
+            </button>
+            </div>
+
 
             <div id="decrypt-progress" class="progress-section hidden">
                 <div class="progress-header">

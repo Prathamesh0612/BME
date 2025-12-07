@@ -5,7 +5,7 @@ let necModel = null;
 async function loadNECModel() {
     try {
         // TFJS model ka relative URL
-        necModel = await tf.loadLayersModel('./nec_model_tjfs/model.json');
+        necModel = await tf.loadLayersModel('nec_model_tfjs/model.json');
         console.log('✓ NEC AI model loaded successfully');
         updateAIStatus('✓ AI Model Active');
         return true;
@@ -1382,6 +1382,11 @@ async encryptFile() {
         const aiNote = this.fileAnalysis.aiUsed ? ' (AI-Enhanced)' : ' (Dynamic Heuristic)';
         const compNote = compressed ? ' + Compressed' : '';
         this.showSuccess(`File encrypted successfully${aiNote}${compNote}! Save your key and the .nec file.`);
+        const fsOverwriteEncrypted = document.getElementById('fs-overwrite-encrypted');
+        if (fsOverwriteEncrypted && this.encryptFileHandle && this.encryptedData) {
+            fsOverwriteEncrypted.removeAttribute('disabled');
+}
+
     } catch (err) {
         this.showError(`Encryption failed: ${err.message}`);
         const bar = document.getElementById('encrypt-progress');
@@ -1532,6 +1537,11 @@ this.showProgress('decrypt', 80);
             else this.showError('Hash verification failed - wrong key or corrupted file');
 
             this.restoredData = restored;
+            // restoredData set karne ke baad:
+            const fsOverwriteDecrypted = document.getElementById('fs-overwrite-decrypted');
+            if (fsOverwriteDecrypted && this.decryptFileHandle && this.restoredData) {
+                fsOverwriteDecrypted.removeAttribute('disabled');
+            }
             this.originalFileName = this.encryptedFile.name.replace(/\.nec$/i, '') || 'restored.bin';
             // Try smart post-processing (ZIP detection)
             this.tryPostProcessRestored(restored);
@@ -1946,8 +1956,3 @@ async tryPostProcessRestored(restored) {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 }
-
-
-
-
-
