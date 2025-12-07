@@ -5,7 +5,7 @@ let necModel = null;
 async function loadNECModel() {
     try {
         // TFJS model ka relative URL
-        necModel = await tf.loadLayersModel('./nec_model_tfjs/model.json');
+        necModel = await tf.loadLayersModel('/nec_model_tjfs/model.json');
         console.log('✓ NEC AI model loaded successfully');
         updateAIStatus('✓ AI Model Active');
         return true;
@@ -1946,6 +1946,7 @@ async tryPostProcessRestored(restored) {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 }
+
 
 
 
