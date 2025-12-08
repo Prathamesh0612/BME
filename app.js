@@ -858,7 +858,7 @@ class NECApp {
         if (totalRaw > this.crypto.MAX_FILE_SIZE) {
             this.showError(
                 `Total raw size is too large (${this.formatFileSize(totalRaw)}). ` +
-                `Max allowed by NEC: ${this.crypto.MAX_FILE_SIZE / (1024 * 1024)} MB`
+                `Max allowed by BME: ${this.crypto.MAX_FILE_SIZE / (1024 * 1024)} MB`
             );
             return;
         }
@@ -1025,7 +1025,7 @@ if (bundleEncryptBtn && bundleFilesInput) {
         const dlEnc = document.getElementById('download-encrypted');
         if (dlEnc) {
             dlEnc.addEventListener('click', () =>
-                this.downloadFile(this.encryptedData, `${this.currentFile?.name || 'encrypted'}.nec`)
+                this.downloadFile(this.encryptedData, `${this.currentFile?.name || 'encrypted'}.bme`)
             );
         }
 
@@ -1068,7 +1068,7 @@ if (bundleEncryptBtn && bundleFilesInput) {
         demoButton.textContent = 'Use Demo File (1KB Text)';
         demoButton.style.marginTop = '1rem';
         demoButton.addEventListener('click', () => {
-            const demoText = 'This is a demo file for testing NEC AI-enhanced encryption system.\n'.repeat(25);
+            const demoText = 'This is a demo file for testing BME AI-enhanced encryption system.\n'.repeat(25);
             const demoFile = new File([demoText], 'demo.txt', { type: 'text/plain' });
             this.handleFileSelect(demoFile, 'encrypt');
         });
@@ -1381,7 +1381,7 @@ async encryptFile() {
 
         const aiNote = this.fileAnalysis.aiUsed ? ' (AI-Enhanced)' : ' (Dynamic Heuristic)';
         const compNote = compressed ? ' + Compressed' : '';
-        this.showSuccess(`File encrypted successfully${aiNote}${compNote}! Save your key and the .nec file.`);
+        this.showSuccess(`File encrypted successfully${aiNote}${compNote}! Save your key and the .bme file.`);
         const fsOverwriteEncrypted = document.getElementById('fs-overwrite-encrypted');
         if (fsOverwriteEncrypted && this.encryptFileHandle && this.encryptedData) {
             fsOverwriteEncrypted.removeAttribute('disabled');
@@ -1416,7 +1416,7 @@ async encryptFile() {
             } catch (readErr) {
                 console.error('decrypt: failed to read encryptedFile.arrayBuffer()', readErr);
                 this.showError(
-                    'Failed to read the selected file. Please re-select the .nec file (maybe moved or blocked).'
+                    'Failed to read the selected file. Please re-select the .bme file (maybe moved or blocked).'
                 );
                 const input = document.getElementById('decrypt-file');
                 if (input) {
@@ -1542,7 +1542,7 @@ this.showProgress('decrypt', 80);
             if (fsOverwriteDecrypted && this.decryptFileHandle && this.restoredData) {
                 fsOverwriteDecrypted.removeAttribute('disabled');
             }
-            this.originalFileName = this.encryptedFile.name.replace(/\.nec$/i, '') || 'restored.bin';
+            this.originalFileName = this.encryptedFile.name.replace(/\.bme$/i, '') || 'restored.bin';
             // Try smart post-processing (ZIP detection)
             this.tryPostProcessRestored(restored);
 
@@ -2018,5 +2018,6 @@ function startEncryptCounter(durationMs = 4000) {
 function finishEncryptCounter() {
     setTimeout(() => setEncryptProgress(100), 200); // ✅ snap to 100 at end
 }
+
 
 
